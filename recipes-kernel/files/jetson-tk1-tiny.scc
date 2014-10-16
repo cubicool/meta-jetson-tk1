@@ -1,0 +1,8 @@
+define KMACHINE jetson-tk1
+define KTYPE tiny
+define KARCH arm
+
+include ktypes/tiny/tiny.scc
+branch jetson-tk1
+
+include jetson-tk1.scc

@@ -1,0 +1,12 @@
+define KMACHINE jetson-tk1
+define KTYPE preempt-rt
+define KARCH arm
+
+include ktypes/preempt-rt/preempt-rt.scc
+branch jetson-tk1
+
+include jetson-tk1.scc
+
+# default policy for preempt-rt kernels
+include features/latencytop/latencytop.scc
+include features/profiling/profiling.scc

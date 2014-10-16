@@ -1,0 +1,5 @@
+kconf hardware jetson-tk1.cfg
+include features/usb-net/usb-net.scc
+
+kconf hardware jetson-tk1-user-config.cfg
+include jetson-tk1-user-patches.scc
