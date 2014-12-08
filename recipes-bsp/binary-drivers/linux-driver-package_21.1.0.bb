@@ -3,10 +3,12 @@ HOMEPAGE = "https://developer.nvidia.com/"
 LICENSE = "CLOSED"
 
 SRC_URI = "http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/Tegra124_Linux_R21.1.0_armhf.tbz2 \
-           file://ld.so.conf"
+           file://ld.so.conf \
+           file://nv.conf "
 
 #SRC_URI = "file://Tegra124_Linux_R21.1.0_armhf.tbz2 \
-#           file://ld.so.conf"
+#           file://ld.so.conf \
+#           file://nv.conf "
 
 SRC_URI[md5sum] = "53335e0500a4ae735405011a9d8bef74"
 SRC_URI[sha256sum] = "fe068c12a4e2c38ae0400c67a97552ef85c2786a579e5dcfaf36992e41a46801"
@@ -47,5 +49,9 @@ do_install () {
     mkdir ${D}/etc/X11/
     cp ${S}/etc/X11/xorg.conf* ${D}/etc/X11/
     cp ${WORKDIR}/ld.so.conf ${D}/etc/
+    mkdir ${D}/etc/init.d/
+    mkdir ${D}/etc/rcS.d/
+    cp ${WORKDIR}/nv.conf ${D}/etc/init.d
+    ln -s /etc/init.d/nv.conf ${D}/etc/rcS.d/S40nv
 }
 
