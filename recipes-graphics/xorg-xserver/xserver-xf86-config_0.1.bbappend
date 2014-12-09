@@ -1,1 +1,1 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_prepend_jetson-tk1 := "${THISDIR}/${PN}:"
