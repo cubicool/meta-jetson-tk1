@@ -1,4 +1,5 @@
 # The NVidia driver needs this enabled.
-EXTRA_OECONF += " --enable-xinerama --disable-glx "
+EXTRA_OECONF += " --enable-xinerama "
 
-PACKAGECONFIG[glx] = ""
+PACKAGECONFIG_jetson-tk1-l4t := "${@oe_filter_out('glx', '${PACKAGECONFIG}', d)}"
+
