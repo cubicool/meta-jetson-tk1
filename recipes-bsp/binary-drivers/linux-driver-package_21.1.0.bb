@@ -55,3 +55,9 @@ do_install () {
     ln -s /etc/init.d/nv.conf ${D}/etc/rcS.d/S40nv
 }
 
+do_populate_sysroot () {
+    tar xjf ${WORKDIR}/Linux_for_Tegra/nv_tegra/nvidia_drivers.tbz2 -C ${WORKDIR}/sysroot-destdir/
+    rm ${WORKDIR}/sysroot-destdir/usr/lib/xorg/modules/extensions/libglx.so
+    mkdir ${WORKDIR}/sysroot-destdir/sysroot-providers
+    touch ${WORKDIR}/sysroot-destdir/sysroot-providers/${PN}
+}
