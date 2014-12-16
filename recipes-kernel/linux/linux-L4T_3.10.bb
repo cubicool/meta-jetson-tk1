@@ -13,11 +13,11 @@ DEFAULT_PREFERENCE = "-1"
 
 S = "${WORKDIR}/kernel"
 
-PR = "r21.1.0"
-SRC_URI = "http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/sources/kernel_src.tbz2 \
+PR = "r21.2.0"
+SRC_URI = "http://developer.download.nvidia.com/mobile/tegra/l4t/r21.2.0/sources/kernel_src.tbz2 \
            file://defconfig"
 
-SRC_URI[md5sum] = "beffd0ca511918abc09bcace4bc68e24"
-SRC_URI[sha256sum] = "3343ece79449c96721b32bf22d1ec9316d37504676b8b1275745a5271baf8f88"
+SRC_URI[md5sum] = "886c6ed6d4e5bdefeca8c6da1caeb261"
+SRC_URI[sha256sum] = "ebd8e71d76c1f9d4266899573336fd04944c0ef02d549866ad53e243662a25ec"
 
 KERNEL_DEVICETREE = "tegra124-jetson_tk1-pm375-000-c00-00.dtb"
