@@ -15,7 +15,7 @@ SRC_URI = "http://developer.download.nvidia.com/embedded/L4T/r21_Release_v3.0/Te
 SRC_URI[md5sum] = "5e875672c09451393e447169d3d97cc7"
 SRC_URI[sha256sum] = "0643f2eb3532eebbb066c75d5616f1d0014576f515062700347de9d799cf2e90"
 
-PR = "r1" 
+PR = "r2" 
 
 DEPENDS = "virtual/libx11 alsa-lib libxext"
 
@@ -46,6 +46,9 @@ do_compile () {
 
 do_install () {
     tar xjf ${WORKDIR}/Linux_for_Tegra/nv_tegra/nvidia_drivers.tbz2 -C ${D}
+    ln -sf ./libcuda.so.1.1 ${D}/usr/lib/arm-linux-gnueabihf/tegra/libcuda.so
+    ln -sf ./arm-linux-gnueabihf/tegra/libcuda.so ${D}/usr/lib/libcuda.so
+    ln -sf ./arm-linux-gnueabihf/tegra/libGL.so.1 ${D}/usr/lib/libGL.so
     cp ${S}/etc/asound* ${D}/etc/
     cp -r ${S}/etc/udev ${D}/etc/
     mkdir ${D}/etc/X11/ 
