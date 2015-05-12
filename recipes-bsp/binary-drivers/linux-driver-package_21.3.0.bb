@@ -25,12 +25,15 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 S = "${WORKDIR}/l4tdrv"
 
 
-PACKAGES =+ "${PN}-firmware"
+PACKAGES =+ "${PN}-firmware ${PN}-bugreport"
 
 INSANE_SKIP_${PN}-dev = "ldflags"
 
+FILES_${PN}-bugreport = "${bindir}/nvidia-bug-report-tegra.sh"
+
+RDEPENDS_${PN}-bugreport += "bash"
+
 FILES_${PN} =  "${bindir}/* ${libdir}/* ${sysconfdir}/* ${sysconfdir}/*/*"
-RRECOMMENDS_${PN} = "xserver-xorg-module-libwfb"
 
 FILES_${PN}-firmware = "${base_libdir}/firmware/* ${base_libdir}/firmware/tegra12x/* "
 
@@ -58,6 +61,7 @@ do_install () {
     mkdir ${D}/etc/rcS.d/
     cp ${WORKDIR}/nv.conf ${D}/etc/init.d
     ln -s /etc/init.d/nv.conf ${D}/etc/rcS.d/S40nv
+    rm -rf ${D}${sysconfdir}/ld.so.conf
 }
 
 do_populate_sysroot () {
@@ -66,3 +70,5 @@ do_populate_sysroot () {
     mkdir ${WORKDIR}/sysroot-destdir/sysroot-providers
     touch ${WORKDIR}/sysroot-destdir/sysroot-providers/${PN}
 }
+
+RRECOMMENDS_${PN} = "xserver-xorg-module-libwfb"
