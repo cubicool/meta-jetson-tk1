@@ -56,12 +56,10 @@ do_install () {
     mkdir ${D}/etc/X11/
     cp ${S}/etc/X11/xorg.conf* ${D}/etc/X11/
     cat ${S}/etc/X11/xorg.conf.jetson-tk1 ${WORKDIR}/xorg.conf.add > ${D}/etc/X11/xorg.conf.jetson-tk1
-    cp ${WORKDIR}/ld.so.conf ${D}/etc/
     mkdir ${D}/etc/init.d/
     mkdir ${D}/etc/rcS.d/
     cp ${WORKDIR}/nv.conf ${D}/etc/init.d
     ln -s /etc/init.d/nv.conf ${D}/etc/rcS.d/S40nv
-    rm -rf ${D}${sysconfdir}/ld.so.conf
 }
 
 do_populate_sysroot () {
