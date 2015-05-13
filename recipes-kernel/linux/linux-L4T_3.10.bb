@@ -18,6 +18,7 @@ SRC_URI = "http://developer.download.nvidia.com/embedded/L4T/r21_Release_v3.0/so
            file://0001-kernel-add-support-for-gcc-5.patch \
            file://0001-ARM-8158-1-LLVMLinux-use-static-inline-in-ARM-ftrace.patch \
            file://gcc5.patch \
+	   file://defconfig_fhandle.patch \
            file://defconfig"
 
 SRC_URI[md5sum] = "5e875672c09451393e447169d3d97cc7"
