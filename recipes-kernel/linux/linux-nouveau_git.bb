@@ -10,9 +10,11 @@ require recipes-kernel/linux/linux-yocto.inc
 
 SRC_URI = "git://github.com/Gnurou/linux.git;protocol=https;bareclone=1;branch=${KBRANCH}"
 
-KBRANCH = "drm"
+KBRANCH = "staging/nouveau"
 
-LINUX_VERSION ?= "3.19"
+SRCREV = "12c466def1571ed53c33d06e5c8fe1068b342391"
+
+LINUX_VERSION ?= "4.0"
 
 SRCREV="${AUTOREV}"
 
