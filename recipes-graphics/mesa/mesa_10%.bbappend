@@ -1,1 +1,1 @@
-DEPENDS += "linux-driver-package"
+DEPENDS_append_tegra = " linux-driver-package"
