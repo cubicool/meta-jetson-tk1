@@ -3,7 +3,6 @@ HOMEPAGE = "https://developer.nvidia.com/"
 LICENSE = "CLOSED"
 
 SRC_URI = "http://developer.download.nvidia.com/mobile/tegra/l4t/r21.2.0/pm375_release_armhf/Tegra124_Linux_R21.2.0_armhf.tbz2 \
-           file://ld.so.conf \
            file://nv.conf \
            file://xorg.conf.add"
 
@@ -51,7 +50,6 @@ do_install () {
     mkdir ${D}/etc/X11/ 
     cp ${S}/etc/X11/xorg.conf* ${D}/etc/X11/
     cat ${S}/etc/X11/xorg.conf.jetson-tk1 ${WORKDIR}/xorg.conf.add > ${D}/etc/X11/xorg.conf.jetson-tk1
-    cp ${WORKDIR}/ld.so.conf ${D}/etc/
     mkdir ${D}/etc/init.d/
     mkdir ${D}/etc/rcS.d/
     cp ${WORKDIR}/nv.conf ${D}/etc/init.d
