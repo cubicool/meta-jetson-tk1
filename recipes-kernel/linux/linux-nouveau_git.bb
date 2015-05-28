@@ -18,6 +18,8 @@ LINUX_VERSION ?= "4.0"
 
 SRCREV="${AUTOREV}"
 
+COMPATIBLE_MACHINE = "(jetson-tk1|jetson-tk1-l4t)"
+
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 COMPATIBLE_MACHINE_jetson-tk1 = "jetson-tk1"

@@ -11,6 +11,8 @@ require recipes-kernel/linux/setup-defconfig.inc
 
 DEFAULT_PREFERENCE = "-1"
 
+COMPATIBLE_MACHINE = "(jetson-tk1|jetson-tk1-l4t)"
+
 S = "${WORKDIR}/kernel"
 
 PR = "r21.3.0"
