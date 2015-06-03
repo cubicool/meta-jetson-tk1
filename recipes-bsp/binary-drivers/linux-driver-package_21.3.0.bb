@@ -69,4 +69,13 @@ do_populate_sysroot () {
     touch ${WORKDIR}/sysroot-destdir/sysroot-providers/${PN}
 }
 
+# Add the ABI dependency at package generation time, as otherwise bitbake will
+# attempt to find a provider for it (and fail) when it does the parse.
+#
+# This version *must* be kept correct.
+python populate_packages_prepend() {
+    pn = d.getVar("PN", True)
+    d.appendVar("RDEPENDS_" + pn, " xorg-abi-video-15")
+}
+
 RRECOMMENDS_${PN} = "xserver-xorg-module-libwfb"
