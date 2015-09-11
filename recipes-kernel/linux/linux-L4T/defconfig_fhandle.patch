@@ -1,41 +1,23 @@
-Index: kernel-source/arch/arm/configs/tegra12_defconfig
-===================================================================
---- kernel-source.orig/arch/arm/configs/tegra12_defconfig
-+++ kernel-source/arch/arm/configs/tegra12_defconfig
+From 99fbad413b182269cca06b5337ca9852402893aa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Anders=20R=C3=B8nningen?= <anders@ronningen.priv.no>
+Date: Fri, 11 Sep 2015 10:04:17 +0200
+Subject: [PATCH] hum
+
+---
+ arch/arm/configs/tegra12_defconfig | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/arm/configs/tegra12_defconfig b/arch/arm/configs/tegra12_defconfig
+index 19a6400..eea6304 100644
+--- a/arch/arm/configs/tegra12_defconfig
++++ b/arch/arm/configs/tegra12_defconfig
 @@ -1,4 +1,5 @@
  CONFIG_SYSVIPC=y
 +CONFIG_FHANDLE=y
  CONFIG_NO_HZ=y
  CONFIG_HIGH_RES_TIMERS=y
  CONFIG_IKCONFIG=y
-@@ -31,12 +32,12 @@ CONFIG_MACH_LOKI=y
- CONFIG_MACH_LAGUNA=y
- CONFIG_TEGRA_EMC_SCALING_ENABLE=y
- CONFIG_TEGRA_CLOCK_DEBUG_WRITE=y
--CONFIG_TEGRA_PREINIT_CLOCKS=y
- CONFIG_TEGRA_EDP_LIMITS=y
- CONFIG_TEGRA_GPU_EDP=y
- CONFIG_TEGRA_GADGET_BOOST_CPU_FREQ=1400
--CONFIG_TEGRA_PREPOWER_WIFI=y
- CONFIG_TEGRA_DYNAMIC_PWRDET=y
-+CONFIG_TEGRA_PREINIT_CLOCKS=y
-+CONFIG_TEGRA_PREPOWER_WIFI=y
- CONFIG_TEGRA_PLLM_SCALED=y
- # CONFIG_CACHE_L2X0 is not set
- CONFIG_PCI_TEGRA=y
-@@ -174,10 +175,9 @@ CONFIG_BT_BNEP=m
- CONFIG_BT_HIDP=m
- CONFIG_BT_HCIBTUSB=m
- CONFIG_CFG80211=m
--CONFIG_CFG80211_WEXT=y
- CONFIG_NL80211_TESTMODE=y
-+CONFIG_CFG80211_WEXT=y
- CONFIG_MAC80211=m
--CONFIG_MAC80211_LEDS=y
- CONFIG_RFKILL=m
- CONFIG_RFKILL_GPIO=m
- CONFIG_CAIF=y
-@@ -297,7 +297,6 @@ CONFIG_SENSORS_TMP006=y
+@@ -297,7 +298,6 @@ CONFIG_SENSORS_TMP006=y
  CONFIG_WATCHDOG=y
  CONFIG_WATCHDOG_CORE=y
  CONFIG_WATCHDOG_NOWAYOUT=y
@@ -43,7 +25,7 @@ Index: kernel-source/arch/arm/configs/tegra12_defconfig
  CONFIG_MAX77660_SYSTEM_WATCHDOG=y
  CONFIG_GPADC_TPS80031=y
  CONFIG_AIC3XXX_CORE=y
-@@ -479,11 +478,9 @@ CONFIG_MMC_TEST=y
+@@ -481,11 +481,9 @@ CONFIG_MMC_TEST=y
  CONFIG_MMC_SDHCI=y
  CONFIG_MMC_SDHCI_PLTFM=y
  CONFIG_MMC_SDHCI_TEGRA=y
@@ -55,19 +37,6 @@ Index: kernel-source/arch/arm/configs/tegra12_defconfig
  CONFIG_LEDS_TRIGGER_TIMER=y
  CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
  CONFIG_SWITCH=y
-@@ -560,15 +557,3 @@ CONFIG_CRYPTO_ARC4=y
- CONFIG_CRYPTO_TWOFISH=m
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
- CONFIG_CRYPTO_DEV_TEGRA_SE=y
--# CONFIG_FIQ is not set
--# CONFIG_TEGRA_FIQ_DEBUGGER is not set
--# CONFIG_FIQ_GLUE is not set
--# CONFIG_FIQ_DEBUGGER is not set
--# CONFIG_FIQ_DEBUGGER_NO_SLEEP is not set
--# CONFIG_FIQ_DEBUGGER_WAKEUP_IRQ_ALWAYS_ON is not set
--# CONFIG_FIQ_DEBUGGER_CONSOLE is not set
--# CONFIG_FIQ_DEBUGGER_CONSOLE_DEFAULT_ENABLE is not set
--# CONFIG_TEGRA_WATCHDOG is not set
--# CONFIG_TEGRA_WATCHDOG_ENABLE_ON_PROBE is not set
--# CONFIG_CONSOLE_POLL is not set
--
+-- 
+2.5.1
+
