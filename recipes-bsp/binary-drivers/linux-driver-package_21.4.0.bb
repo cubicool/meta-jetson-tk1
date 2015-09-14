@@ -9,8 +9,6 @@ SRC_URI = "http://developer.download.nvidia.com/embedded/L4T/r21_Release_v4.0/Te
 SRC_URI[md5sum] = "14e9ef046b578e6d769a6cddeccf2931"
 SRC_URI[sha256sum] = "f3539746e307751d0f6a0a9f827ae16a7514c5aeb95f43cc618a317aacb06f69"
 
-PR = "r0"
-
 DEPENDS = "virtual/libx11 alsa-lib libxext"
 
 INSANE_SKIP_${PN} = "ldflags"
