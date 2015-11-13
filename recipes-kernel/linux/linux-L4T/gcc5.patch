@@ -1,0 +1,45 @@
+Fix errors found with gcc 5
+
+arch/arm/mach-tegra/tegra_cl_dvfs.c:372:9: error: 'data' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  *data &= CL_DVFS_MONITOR_DATA_MASK;
+
+arch/arm/mach-tegra/tegra_cl_dvfs.c:372:9: error: 'v' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  *data &= CL_DVFS_MONITOR_DATA_MASK;
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: kernel-source/arch/arm/mach-tegra/tegra12_clocks.c
+===================================================================
+--- kernel-source.orig/arch/arm/mach-tegra/tegra12_clocks.c
++++ kernel-source/arch/arm/mach-tegra/tegra12_clocks.c
+@@ -1331,7 +1331,7 @@ static struct clk_ops tegra13_super_cclk
+  */
+ static void tegra12_cpu_clk_init(struct clk *c)
+ {
+-	c->state = (!is_lp_cluster() == (c->u.cpu.mode == MODE_G))? ON : OFF;
++	c->state = ((!is_lp_cluster()) == (c->u.cpu.mode == MODE_G))? ON : OFF;
+ }
+ 
+ static int tegra12_cpu_clk_enable(struct clk *c)
+Index: kernel-source/arch/arm/mach-tegra/tegra_cl_dvfs.c
+===================================================================
+--- kernel-source.orig/arch/arm/mach-tegra/tegra_cl_dvfs.c
++++ kernel-source/arch/arm/mach-tegra/tegra_cl_dvfs.c
+@@ -899,7 +899,7 @@ static inline void calibration_timer_upd
+ 
+ static void cl_dvfs_calibrate(struct tegra_cl_dvfs *cld)
+ {
+-	u32 val, data;
++	u32 val = 0, data = 0;
+ 	ktime_t now;
+ 	unsigned long rate;
+ 	unsigned long step = RATE_STEP(cld);
+@@ -2946,7 +2946,7 @@ DEFINE_SIMPLE_ATTRIBUTE(lock_fops, lock_
+ 
+ static int monitor_get(void *data, u64 *val)
+ {
+-	u32 v, s;
++	u32 v = 0, s = 0;
+ 	unsigned long flags;
+ 	struct clk *c = (struct clk *)data;
+ 	struct tegra_cl_dvfs *cld = ((struct clk *)data)->u.dfll.cl_dvfs;

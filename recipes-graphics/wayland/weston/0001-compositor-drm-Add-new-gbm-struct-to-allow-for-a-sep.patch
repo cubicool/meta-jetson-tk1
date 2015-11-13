@@ -1,0 +1,174 @@
+From c4a421eddbf71e9f1841c143b69de28be2792491 Mon Sep 17 00:00:00 2001
+From: James Thomas <james.thomas@codethink.co.uk>
+Date: Fri, 20 Jun 2014 12:12:26 +0100
+Subject: [PATCH 1/2] compositor-drm: Add new gbm struct to allow for a
+ separate gbm device
+
+This is needed for devices like tegra jetson where the gbm device is not
+the same as the drm device
+
+Conflicts:
+	src/compositor-drm.c
+---
+ src/compositor-drm.c | 43 +++++++++++++++++++++++++------------------
+ 2 files changed, 58 insertions(+), 26 deletions(-)
+
+diff --git a/src/compositor-drm.c b/src/compositor-drm.c
+index 71ece6b..d83c056 100644
+--- a/src/compositor-drm.c
++++ b/src/compositor-drm.c
+@@ -93,7 +93,11 @@ struct drm_compositor {
+ 		int fd;
+ 		char *filename;
+ 	} drm;
+-	struct gbm_device *gbm;
++	struct {
++		int fd;
++		char *filename;
++	} gbm;
++	struct gbm_device *gbm_device;
+ 	uint32_t *crtcs;
+ 	int num_crtcs;
+ 	uint32_t crtc_allocator;
+@@ -474,7 +478,7 @@ drm_output_prepare_scanout_view(struct drm_output *output,
+ 
+ 	if (ev->geometry.x != output->base.x ||
+ 	    ev->geometry.y != output->base.y ||
+-	    buffer == NULL || c->gbm == NULL ||
++	    buffer == NULL || c->gbm_device == NULL ||
+ 	    buffer->width != output->base.current_mode->width ||
+ 	    buffer->height != output->base.current_mode->height ||
+ 	    output->base.transform != viewport->buffer.transform ||
+@@ -484,7 +488,7 @@ drm_output_prepare_scanout_view(struct drm_output *output,
+ 	if (ev->geometry.scissor_enabled)
+ 		return NULL;
+ 
+-	bo = gbm_bo_import(c->gbm, GBM_BO_IMPORT_WL_BUFFER,
++	bo = gbm_bo_import(c->gbm_device, GBM_BO_IMPORT_WL_BUFFER,
+ 			   buffer->resource, GBM_BO_USE_SCANOUT);
+ 
+ 	/* Unable to use the buffer for scanout */
+@@ -854,7 +858,7 @@ drm_output_prepare_overlay_view(struct drm_output *output,
+ 	uint32_t format;
+ 	wl_fixed_t sx1, sy1, sx2, sy2;
+ 
+-	if (c->gbm == NULL)
++	if (c->gbm_device == NULL)
+ 		return NULL;
+ 
+ 	if (viewport->buffer.transform != output->base.transform)
+@@ -895,7 +899,7 @@ drm_output_prepare_overlay_view(struct drm_output *output,
+ 	if (!found)
+ 		return NULL;
+ 
+-	bo = gbm_bo_import(c->gbm, GBM_BO_IMPORT_WL_BUFFER,
++	bo = gbm_bo_import(c->gbm_device, GBM_BO_IMPORT_WL_BUFFER,
+ 			   ev->surface->buffer_ref.buffer->resource,
+ 			   GBM_BO_USE_SCANOUT);
+ 	if (!bo)
+@@ -991,7 +995,7 @@ drm_output_prepare_cursor_view(struct drm_output *output,
+ 		(struct drm_compositor *)output->base.compositor;
+ 	struct weston_buffer_viewport *viewport = &ev->surface->buffer_viewport;
+ 
+-	if (c->gbm == NULL)
++	if (c->gbm_device == NULL)
+ 		return NULL;
+ 	if (output->base.transform != WL_OUTPUT_TRANSFORM_NORMAL)
+ 		return NULL;
+@@ -1342,6 +1346,9 @@ init_drm(struct drm_compositor *ec, struct udev_device *device)
+ 	ec->drm.fd = fd;
+ 	ec->drm.filename = strdup(filename);
+ 
++	ec->gbm.fd = fd;
++	ec->gbm.filename = ec->drm.filename;
++
+ 	ret = drmGetCap(fd, DRM_CAP_TIMESTAMP_MONOTONIC, &cap);
+ 	if (ret == 0 && cap == 1)
+ 		clk_id = CLOCK_MONOTONIC;
+@@ -1427,7 +1434,7 @@ drm_compositor_create_gl_renderer(struct drm_compositor *ec)
+ 		n_formats = 2;
+ 	if (gl_renderer->create(&ec->base,
+ 				EGL_PLATFORM_GBM_KHR,
+-				(void *)ec->gbm,
++				(void *)ec->gbm_device,
+ 				gl_renderer->opaque_attribs,
+ 				format,
+ 				n_formats) < 0) {
+@@ -1440,13 +1447,13 @@ drm_compositor_create_gl_renderer(struct drm_compositor *ec)
+ static int
+ init_egl(struct drm_compositor *ec)
+ {
+-	ec->gbm = create_gbm_device(ec->drm.fd);
++	ec->gbm_device = create_gbm_device(ec->gbm.fd);
+ 
+-	if (!ec->gbm)
++	if (!ec->gbm_device)
+ 		return -1;
+ 
+ 	if (drm_compositor_create_gl_renderer(ec) < 0) {
+-		gbm_device_destroy(ec->gbm);
++		gbm_device_destroy(ec->gbm_device);
+ 		return -1;
+ 	}
+ 
+@@ -1640,7 +1647,7 @@ drm_output_init_egl(struct drm_output *output, struct drm_compositor *ec)
+ 	};
+ 	int i, flags, n_formats = 1;
+ 
+-	output->surface = gbm_surface_create(ec->gbm,
++	output->surface = gbm_surface_create(ec->gbm_device,
+ 					     output->base.current_mode->width,
+ 					     output->base.current_mode->height,
+ 					     format[0],
+@@ -1671,7 +1678,7 @@ drm_output_init_egl(struct drm_output *output, struct drm_compositor *ec)
+ 			continue;
+ 
+ 		output->cursor_bo[i] =
+-			gbm_bo_create(ec->gbm, ec->cursor_width, ec->cursor_height,
++			gbm_bo_create(ec->gbm_device, ec->cursor_width, ec->cursor_height,
+ 				GBM_FORMAT_ARGB8888, flags);
+ 	}
+ 
+@@ -2473,8 +2480,8 @@ drm_destroy(struct weston_compositor *ec)
+ 
+ 	weston_compositor_shutdown(ec);
+ 
+-	if (d->gbm)
+-		gbm_device_destroy(d->gbm);
++	if (d->gbm_device)
++		gbm_device_destroy(d->gbm_device);
+ 
+ 	weston_launcher_destroy(d->base.launcher);
+ 
+@@ -2764,8 +2771,8 @@ switch_to_gl_renderer(struct drm_compositor *c)
+ 
+ 	weston_log("Switching to GL renderer\n");
+ 
+-	c->gbm = create_gbm_device(c->drm.fd);
+-	if (!c->gbm) {
++	c->gbm_device = create_gbm_device(c->drm.fd);
++	if (!c->gbm_device) {
+ 		weston_log("Failed to create gbm device. "
+ 			   "Aborting renderer switch\n");
+ 		return;
+@@ -2777,7 +2784,7 @@ switch_to_gl_renderer(struct drm_compositor *c)
+ 	c->base.renderer->destroy(&c->base);
+ 
+ 	if (drm_compositor_create_gl_renderer(c) < 0) {
+-		gbm_device_destroy(c->gbm);
++		gbm_device_destroy(c->gbm_device);
+ 		weston_log("Failed to create GL renderer. Quitting.\n");
+ 		/* FIXME: we need a function to shutdown cleanly */
+ 		assert(0);
+@@ -2963,7 +2970,7 @@ err_udev_input:
+ 	udev_input_destroy(&ec->input);
+ err_sprite:
+ 	ec->base.renderer->destroy(&ec->base);
+-	gbm_device_destroy(ec->gbm);
++	gbm_device_destroy(ec->gbm_device);
+ 	destroy_sprites(ec);
+ err_udev_dev:
+ 	udev_device_unref(drm_device);
+-- 
+2.1.4
+

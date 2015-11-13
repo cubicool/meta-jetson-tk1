@@ -1,0 +1,13 @@
+Index: xorg-server-1.15.2/hw/xfree86/common/compiler.h
+===================================================================
+--- xorg-server-1.15.2.orig/hw/xfree86/common/compiler.h
++++ xorg-server-1.15.2/hw/xfree86/common/compiler.h
+@@ -996,7 +996,7 @@ inl(unsigned short port)
+     return xf86ReadMmio32Le((void *) ioBase, port);
+ }
+ 
+-#elif defined(__arm__) && defined(__linux__)
++#elif defined(__arm__) && defined(__linux__) && defined(__GLIBC__)
+ 
+ /* for Linux on ARM, we use the LIBC inx/outx routines */
+ /* note that the appropriate setup via "ioperm" needs to be done */
