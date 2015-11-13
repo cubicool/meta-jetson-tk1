@@ -53,6 +53,7 @@ do_install () {
     mkdir ${D}/etc/rcS.d/
     cp ${WORKDIR}/nv.conf ${D}/etc/init.d
     ln -s /etc/init.d/nv.conf ${D}/etc/rcS.d/S40nv
+    echo "/usr/lib/arm-linux-gnueabihf/tegra" > ${D}/etc/ld.so.conf.d/nvidia-tegra.conf
 }
 
 do_populate_sysroot () {
@@ -60,15 +61,6 @@ do_populate_sysroot () {
     rm ${WORKDIR}/sysroot-destdir/usr/lib/xorg/modules/extensions/libglx.so
     mkdir ${WORKDIR}/sysroot-destdir/sysroot-providers
     touch ${WORKDIR}/sysroot-destdir/sysroot-providers/${PN}
-}
-
-# Add the ABI dependency at package generation time, as otherwise bitbake will
-# attempt to find a provider for it (and fail) when it does the parse.
-#
-# This version *must* be kept correct.
-python populate_packages_prepend() {
-    pn = d.getVar("PN", True)
-    d.appendVar("RDEPENDS_" + pn, " xorg-abi-video-15")
 }
 
 RRECOMMENDS_${PN} = "xserver-xorg-module-libwfb"
